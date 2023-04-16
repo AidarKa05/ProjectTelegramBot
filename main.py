@@ -19,13 +19,13 @@ def welcome(message):
     item2 = types.KeyboardButton("Игры")
     item3 = types.KeyboardButton("Киберспорт")
     item4 = types.KeyboardButton("Кино")
-    item5 = types.KeyboardButton("Электроника")
+    item5 = types.KeyboardButton("Технологии")
     item6 = types.KeyboardButton("Скидки")
 
     markup.add(item1, item2, item3, item4, item5, item6)
 
     bot.send_message(message.chat.id,
-                     f"Добро пожаловать, {message.from_user.first_name}!\nЗдесь Вы найдете последние новости из мира игр, кино и технологий.",
+                     f"Добро пожаловать, {message.from_user.first_name}!\nЗдесь собраны актуальные новости об играх, фильмах и сериалах, современных технологиях и киберспорте.",
                      parse_mode='html', reply_markup=markup)
 
     us_id = message.from_user.id
@@ -36,7 +36,15 @@ def welcome(message):
 
 @bot.message_handler(commands=['help'])
 def help(message):
-    bot.send_message(message.chat.id, 'Пока что без помощи')
+    bot.send_message(message.chat.id, 'Игровые новости - последние новости об играх на ПК, PS4, Xbox X, Android, iOS.\n'
+                                      '-------------------------------------------------------------------------\n'
+                                      'Киберспорт - новости, киберспортивные турниры по CS:GO, Dota 2, LoL, PUBG и другим играм.\n'
+                                      '-------------------------------------------------------------------------\n'
+                                      'Новости кино - фильмы и сериалы, даты выхода, анонсы, трейлеры, сборы.\n'
+                                      '-------------------------------------------------------------------------\n'
+                                      'Новости высоких технологий - анонсы и обзоры смартфонов, консолей, компьютерных комплектующих.\n'
+                                      '-------------------------------------------------------------------------\n'
+                                      'Скидки на игры для ПК, PS4, Xbox One - игровые распродажи в Steam, PS Store, Epic Games Store.')
 
 
 news = news()
@@ -139,7 +147,7 @@ def text(message):
                 bot.send_message(message.chat.id, 'Это все новости в киноиндустрии на сегодня')
                 c_movie = 0
                 f_movie = False
-        if message.text == 'Электроника' and f_electr:
+        if message.text == 'Технологии' and f_electr:
             sp = electr
             active = 'Электр'
             tit, dop, ss = [el for el in sp[c_electr]]
