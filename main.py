@@ -1,11 +1,12 @@
+import requests
+from bs4 import BeautifulSoup as BS
 import telebot
 import config
 from get_info import news, games, cybersport, movie, electronics, discount
-from sqlighter import SQLighter
+from db import db_add_user
 from telebot import types
 
 bot = telebot.TeleBot(config.TOKEN)
-db = SQLighter('db.db')
 
 
 @bot.message_handler(commands=['start'])
@@ -24,28 +25,18 @@ def welcome(message):
     markup.add(item1, item2, item3, item4, item5, item6)
 
     bot.send_message(message.chat.id,
-                     "Добро пожаловать, {0.first_name}!\n<b>{1.first_name}</b> - здесь Вы найдете последние новости из мира игр, а также новости из киноиндустрии, электроники и скидки.".format(message.from_user, bot.get_me()),
+                     f"Добро пожаловать, {message.from_user.first_name}!\nЗдесь Вы найдете последние новости из мира игр, кино и технологий.",
                      parse_mode='html', reply_markup=markup)
 
+    us_id = message.from_user.id
+    user_name = message.from_user.username
 
-'''@bot.message_handler(commands=['subscribe'])
-def subscribe(message):
-    if not db.subscriber_exists(message.from_user.id):
-        db.add_subscriber(message.from_user.id)
-    else:
-        db.update_subscription(message.from_user.id, True)
-        bot.send_message(message.chat.id,
-        "Вы успешно подписались на рассылку!\nЖдите, скоро выйдут новые обзоры и вы узнаете о них первыми =)")
+    db_add_user(user_id=us_id, user_name=user_name)
 
 
-@bot.message_handler(commands=['unsubscribe'])
-def unsubscribe(message):
-    if not db.subscriber_exists(message.from_user.id):
-        db.add_subscriber(message.from_user.id, False)
-        bot.send_message(message.chat.id, "Вы итак не подписаны.")
-    else:
-        db.update_subscription(message.from_user.id, False)
-        bot.send_message(message.chat.id, "Вы успешно отписаны от рассылки.")'''
+@bot.message_handler(commands=['help'])
+def help(message):
+    bot.send_message(message.chat.id, 'Пока что без помощи')
 
 
 news = news()
@@ -83,12 +74,15 @@ def text(message):
         if message.text == 'Новости' and f_news:
             sp = news
             active = 'Новости'
-            tit, img, dop, ss = [el for el in sp[c_news]]
+            tit, dop, ss = [el for el in sp[c_news]]
             bot.send_message(message.chat.id, tit)
             markup = types.InlineKeyboardMarkup(row_width=3)
             item1 = types.InlineKeyboardButton("Подробнее", callback_data='more')
             markup.add(item1)
             c_news += 1
+            inf_img = requests.get(ss)
+            soup = BS(inf_img.content, 'lxml')
+            img = soup.find(class_="lcol").find(class_="main_pic_container").find("img").get("src")
             bot.send_photo(message.chat.id, img, caption=dop, reply_markup=markup)
             if c_news == len(sp):
                 bot.send_message(message.chat.id, 'Это все новости на сегодня')
@@ -97,12 +91,15 @@ def text(message):
         if message.text == 'Игры' and f_games:
             sp = games
             active = 'Игры'
-            tit, img, dop, ss = [el for el in sp[c_games]]
+            tit, dop, ss = [el for el in sp[c_games]]
             bot.send_message(message.chat.id, tit)
             markup = types.InlineKeyboardMarkup(row_width=3)
             item1 = types.InlineKeyboardButton("Подробнее", callback_data='more')
             markup.add(item1)
             c_games += 1
+            inf_img = requests.get(ss)
+            soup = BS(inf_img.content, 'lxml')
+            img = soup.find(class_="lcol").find(class_="main_pic_container").find("img").get("src")
             bot.send_photo(message.chat.id, img, caption=dop, reply_markup=markup)
             if c_games == len(sp):
                 bot.send_message(message.chat.id, 'Это все игровые новости на сегодня')
@@ -111,12 +108,15 @@ def text(message):
         if message.text == 'Киберспорт' and f_cyber:
             sp = cyber
             active = 'Кибер'
-            tit, img, dop, ss = [el for el in sp[c_cyber]]
+            tit, dop, ss = [el for el in sp[c_cyber]]
             bot.send_message(message.chat.id, tit)
             markup = types.InlineKeyboardMarkup(row_width=3)
             item1 = types.InlineKeyboardButton("Подробнее", callback_data='more')
             markup.add(item1)
             c_cyber += 1
+            inf_img = requests.get(ss)
+            soup = BS(inf_img.content, 'lxml')
+            img = soup.find(class_="lcol").find(class_="main_pic_container").find("img").get("src")
             bot.send_photo(message.chat.id, img, caption=dop, reply_markup=markup)
             if c_cyber == len(sp):
                 bot.send_message(message.chat.id, 'Это все новости по киберспорту на сегодня')
@@ -125,12 +125,15 @@ def text(message):
         if message.text == 'Кино' and f_movie:
             sp = movie
             active = 'Кино'
-            tit, img, dop, ss = [el for el in sp[c_movie]]
+            tit, dop, ss = [el for el in sp[c_movie]]
             bot.send_message(message.chat.id, tit)
             markup = types.InlineKeyboardMarkup(row_width=3)
             item1 = types.InlineKeyboardButton("Подробнее", callback_data='more')
             markup.add(item1)
             c_movie += 1
+            inf_img = requests.get(ss)
+            soup = BS(inf_img.content, 'lxml')
+            img = soup.find(class_="lcol").find(class_="main_pic_container").find("img").get("src")
             bot.send_photo(message.chat.id, img, caption=dop, reply_markup=markup)
             if c_movie == len(sp):
                 bot.send_message(message.chat.id, 'Это все новости в киноиндустрии на сегодня')
@@ -139,12 +142,15 @@ def text(message):
         if message.text == 'Электроника' and f_electr:
             sp = electr
             active = 'Электр'
-            tit, img, dop, ss = [el for el in sp[c_electr]]
+            tit, dop, ss = [el for el in sp[c_electr]]
             bot.send_message(message.chat.id, tit)
             markup = types.InlineKeyboardMarkup(row_width=3)
             item1 = types.InlineKeyboardButton("Подробнее", callback_data='more')
             markup.add(item1)
             c_electr += 1
+            inf_img = requests.get(ss)
+            soup = BS(inf_img.content, 'lxml')
+            img = soup.find(class_="lcol").find(class_="main_pic_container").find("img").get("src")
             bot.send_photo(message.chat.id, img, caption=dop, reply_markup=markup)
             if c_electr == len(sp):
                 bot.send_message(message.chat.id, 'Это все новости электроники на сегодня')
@@ -153,12 +159,15 @@ def text(message):
         if message.text == 'Скидки' and f_discount:
             sp = discount
             active = 'Скидки'
-            tit, img, dop, ss = [el for el in sp[c_discount]]
+            tit, dop, ss = [el for el in sp[c_discount]]
             bot.send_message(message.chat.id, tit)
             markup = types.InlineKeyboardMarkup(row_width=3)
             item1 = types.InlineKeyboardButton("Подробнее", callback_data='more')
             markup.add(item1)
             c_discount += 1
+            inf_img = requests.get(ss)
+            soup = BS(inf_img.content, 'lxml')
+            img = soup.find(class_="lcol").find(class_="main_pic_container").find("img").get("src")
             bot.send_photo(message.chat.id, img, caption=dop, reply_markup=markup)
             if c_discount == len(sp):
                 bot.send_message(message.chat.id, 'Это все скидки на сегодня')
@@ -172,17 +181,17 @@ def callback_inline(call):
     if call.message:
         if call.data == 'more':
             if active == 'Новости':
-                bot.send_message(call.message.chat.id, sp[c_news - 1][3])
+                bot.send_message(call.message.chat.id, sp[c_news - 1][2])
             if active == 'Игры':
-                bot.send_message(call.message.chat.id, sp[c_games - 1][3])
+                bot.send_message(call.message.chat.id, sp[c_games - 1][2])
             if active == 'Кибер':
-                bot.send_message(call.message.chat.id, sp[c_cyber - 1][3])
+                bot.send_message(call.message.chat.id, sp[c_cyber - 1][2])
             if active == 'Кино':
-                bot.send_message(call.message.chat.id, sp[c_movie - 1][3])
+                bot.send_message(call.message.chat.id, sp[c_movie - 1][2])
             if active == 'Электр':
-                bot.send_message(call.message.chat.id, sp[c_electr - 1][3])
+                bot.send_message(call.message.chat.id, sp[c_electr - 1][2])
             if active == 'Скидки':
-                bot.send_message(call.message.chat.id, sp[c_discount - 1][3])
+                bot.send_message(call.message.chat.id, sp[c_discount - 1][2])
 
 
 bot.polling(none_stop=True)

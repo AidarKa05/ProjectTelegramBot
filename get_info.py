@@ -12,12 +12,10 @@ def news():
     news = []
     for item in data:
         inf = item.find(class_="aubli_img")
-        it = inf.find("img")
-        title = it.get('alt')
-        image = it.get('src')
+        title = inf.find("img").get("alt")
         dop = item.find(class_="aubli_desc").text
         ssylka = inf.get('href')
-        news.append((title, image, dop, f'{host}{ssylka}'))
+        news.append((title, dop, f'{host}{ssylka}'))
     return news
 
 
@@ -29,12 +27,10 @@ def games():
     games = []
     for item in data:
         inf = item.find(class_="aubli_img")
-        it = inf.find("img")
-        title = it.get('alt')
-        image = it.get('src')
+        title = inf.find("img").get("alt")
         dop = item.find(class_="aubli_desc").text
         ssylka = inf.get('href')
-        games.append((title, image, dop, f'{host}{ssylka}'))
+        games.append((title, dop, f'{host}{ssylka}'))
     return games
 
 
@@ -46,12 +42,10 @@ def cybersport():
     cyber = []
     for item in data:
         inf = item.find(class_="aubli_img")
-        it = inf.find("img")
-        title = it.get('alt')
-        image = it.get('src')
+        title = inf.find("img").get("alt")
         dop = item.find(class_="aubli_desc").text
         ssylka = inf.get('href')
-        cyber.append((title, image, dop, f'{host}{ssylka}'))
+        cyber.append((title, dop, f'{host}{ssylka}'))
     return cyber
 
 
@@ -63,12 +57,10 @@ def movie():
     movie = []
     for item in data:
         inf = item.find(class_="aubli_img")
-        it = inf.find("img")
-        title = it.get('alt')
-        image = it.get('src')
+        title = inf.find("img").get("alt")
         dop = item.find(class_="aubli_desc").text
         ssylka = inf.get('href')
-        movie.append((title, image, dop, f'{host}{ssylka}'))
+        movie.append((title, dop, f'{host}{ssylka}'))
     return movie
 
 
@@ -80,12 +72,10 @@ def electronics():
     electr = []
     for item in data:
         inf = item.find(class_="aubli_img")
-        it = inf.find("img")
-        title = it.get('alt')
-        image = it.get('src')
+        title = inf.find("img").get("alt")
         dop = item.find(class_="aubli_desc").text
         ssylka = inf.get('href')
-        electr.append((title, image, dop, f'{host}{ssylka}'))
+        electr.append((title, dop, f'{host}{ssylka}'))
     return electr
 
 
@@ -97,11 +87,9 @@ def discount():
     discount = []
     for item in data:
         inf = item.find(class_="aubli_img")
-        it = inf.find("img")
-        title = it.get('alt')
-        image = it.get('src')
+        title = inf.find("img").get("alt")
         dop = item.find(class_="aubli_desc").text
         ssylka = inf.get('href')
-        discount.append((title, image, dop, f'{host}{ssylka}'))
+        discount.append((title, dop, f'{host}{ssylka}'))
     return discount
 
