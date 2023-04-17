@@ -92,4 +92,3 @@ def discount():
         ssylka = inf.get('href')
         discount.append((title, dop, f'{host}{ssylka}'))
     return discount
-
