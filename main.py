@@ -1,10 +1,11 @@
+import telebot
+from telebot import types
 import requests
 from bs4 import BeautifulSoup as BS
-import telebot
 import config
-from get_info import news, games, cybersport, movie, electronics, discount
+from parsing import get_info
 from db import db_add_user
-from telebot import types
+
 
 bot = telebot.TeleBot(config.TOKEN)
 
@@ -25,7 +26,8 @@ def welcome(message):
     markup.add(item1, item2, item3, item4, item5, item6)
 
     bot.send_message(message.chat.id,
-                     f"Добро пожаловать, {message.from_user.first_name}!\nЗдесь собраны актуальные новости об играх, фильмах и сериалах, современных технологиях и киберспорте.",
+                     f"Добро пожаловать, {message.from_user.first_name}!\n"
+                     f"Здесь собраны актуальные новости об играх, фильмах и сериалах, современных технологиях и киберспорте.",
                      parse_mode='html', reply_markup=markup)
 
     us_id = message.from_user.id
@@ -47,27 +49,27 @@ def help(message):
                                       'Скидки на игры для ПК, PS4, Xbox One - игровые распродажи в Steam, PS Store, Epic Games Store.')
 
 
-news = news()
+news = get_info('https://www.igromania.ru/news/')
 f_news = True
 c_news = 0
 
-games = games()
+games = get_info('https://www.igromania.ru/news/game/')
 f_games = True
 c_games = 0
 
-cyber = cybersport()
+cyber = get_info('https://www.igromania.ru/news/cybersport/')
 f_cyber = True
 c_cyber = 0
 
-movie = movie()
+movie = get_info('https://www.igromania.ru/news/kino/')
 f_movie = True
 c_movie = 0
 
-electr = electronics()
+electr = get_info('https://www.igromania.ru/news/hard/')
 f_electr = True
 c_electr = 0
 
-discount = discount()
+discount = get_info('https://www.igromania.ru/news/sale/')
 f_discount = True
 c_discount = 0
 
