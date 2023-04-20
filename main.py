@@ -46,7 +46,9 @@ def help(message):
                                       '------------------------------------------------------------------------\n'
                                       'Новости высоких технологий - анонсы и обзоры смартфонов, консолей, компьютерных комплектующих.\n'
                                       '------------------------------------------------------------------------\n'
-                                      'Скидки на игры для ПК, PS4, Xbox One - игровые распродажи в Steam, PS Store, Epic Games Store.')
+                                      'Скидки на игры для ПК, PS4, Xbox One - игровые распродажи в Steam, PS Store, Epic Games Store.\n'
+                                      '------------------------------------------------------------------------\n'
+                                      '/updatenews - команда для обновления новостей.')
 
 
 news = get_info('https://www.igromania.ru/news/')
@@ -75,6 +77,54 @@ c_discount = 0
 
 sp = []
 active = ''
+
+
+@bot.message_handler(commands=['updatenews'])
+def updatenews(message):
+    global news, f_news, c_news, games, f_games, c_games, cyber, f_cyber, c_cyber, movie, f_movie, c_movie, electr, f_electr, c_electr, discount, f_discount, c_discount
+    s = []
+    update = False
+    if news != get_info('https://www.igromania.ru/news/'):
+        news = get_info('https://www.igromania.ru/news/')
+        f_news = True
+        c_news = 0
+        s.append('новости')
+        update = True
+    if games != get_info('https://www.igromania.ru/news/game/'):
+        games = get_info('https://www.igromania.ru/news/game/')
+        f_games = True
+        c_games = 0
+        s.append('игры')
+        update = True
+    if cyber != get_info('https://www.igromania.ru/news/cybersport/'):
+        cyber = get_info('https://www.igromania.ru/news/cybersport/')
+        f_cyber = True
+        c_cyber = 0
+        s.append('киберспорт')
+        update = True
+    if movie != get_info('https://www.igromania.ru/news/kino/'):
+        movie = get_info('https://www.igromania.ru/news/kino/')
+        f_movie = True
+        c_movie = 0
+        s.append('кино')
+        update = True
+    if electr != get_info('https://www.igromania.ru/news/hard/'):
+        electr = get_info('https://www.igromania.ru/news/hard/')
+        f_electr = True
+        c_electr = 0
+        s.append('технологии')
+        update = True
+    if discount != get_info('https://www.igromania.ru/news/sale/'):
+        discount = get_info('https://www.igromania.ru/news/sale/')
+        f_discount = True
+        c_discount = 0
+        s.append('скидки')
+        update = True
+    if update:
+        ln = ', '.join(s)
+        bot.send_message(message.chat.id, f'Найдены новые новости в разделе: {ln}.')
+    if not update:
+        bot.send_message(message.chat.id, f'Новые новости не найдены.')
 
 
 @bot.message_handler(content_types=['text'])
@@ -204,4 +254,5 @@ def callback_inline(call):
                 bot.send_message(call.message.chat.id, sp[c_discount - 1][2])
 
 
-bot.polling(none_stop=True)
+if __name__ == '__main__':
+    bot.polling(none_stop=True)
