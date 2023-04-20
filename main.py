@@ -31,8 +31,7 @@ def welcome(message):
                      parse_mode='html', reply_markup=markup)
 
     us_id = message.from_user.id
-    user_name = message.from_user.username
-
+    user_name = f'{message.from_user.last_name} {message.from_user.first_name}'
     db_add_user(user_id=us_id, user_name=user_name)
 
 
