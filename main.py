@@ -81,7 +81,8 @@ active = ''
 
 @bot.message_handler(commands=['updatenews'])
 def updatenews(message):
-    global news, f_news, c_news, games, f_games, c_games, cyber, f_cyber, c_cyber, movie, f_movie, c_movie, electr, f_electr, c_electr, discount, f_discount, c_discount
+    global news, f_news, c_news, games, f_games, c_games, cyber, f_cyber, c_cyber, movie, f_movie, c_movie, \
+        electr, f_electr, c_electr, discount, f_discount, c_discount
     s = []
     update = False
     if news != get_info('https://www.igromania.ru/news/'):
@@ -129,7 +130,8 @@ def updatenews(message):
 
 @bot.message_handler(content_types=['text'])
 def text(message):
-    global sp, news, f_news, c_news, games, f_games, c_games, cyber, f_cyber, c_cyber, movie, f_movie, c_movie, electr, f_electr, c_electr, discount, f_discount, c_discount, active
+    global sp, news, f_news, c_news, games, f_games, c_games, cyber, f_cyber, c_cyber, movie, f_movie, c_movie, \
+        electr, f_electr, c_electr, discount, f_discount, c_discount, active
     if message.chat.type == 'private':
         if message.text == 'Новости' and f_news:
             sp = news
